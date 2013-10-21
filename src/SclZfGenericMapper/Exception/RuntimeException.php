@@ -24,4 +24,25 @@ class RuntimeException extends \RuntimeException implements ExceptionInterface
     {
         return new self('Multiple results were returned when only 1 was expected.');
     }
+
+    /**
+     * 'SclZfGenericMapper\Exception\RuntimeException'
+     *
+     * @return RuntimeException
+     */
+    public static function setPrototypeCalledAgain()
+    {
+        return new self('setPrototype() can only be called once.');
+    }
+
+
+    /**
+     * 'Prototype entity class has not been set.'
+     *
+     * @return RuntimeException
+     */
+    public static function prototypeNotSet()
+    {
+        return new self( 'Prototype entity class has not been set.');
+    }
 }

@@ -9,6 +9,7 @@
 namespace SclZfGenericMapper;
 
 use SclZfGenericMapper\Exception\InvalidArgumentException;
+use SclZfGenericMapper\Exception\RuntimeException;
 
 /**
  * Common methods for mappers.
@@ -28,11 +29,12 @@ trait CommonMapperMethodsTrait
      * Creates an instance of the entity.
      *
      * @return object
-     * @todo   Make sure set prototype has been called.
+     *
+     * @throws RuntimeException If prototype has not yet been set.
      */
     public function create()
     {
-        $entityClass = $this->entityName;
+        $entityClass = $this->getEntityName();
 
         return new $entityClass();
     }
@@ -41,11 +43,54 @@ trait CommonMapperMethodsTrait
      * Return the name of the entity this mapper works with.
      *
      * @return string
-     * @todo   Make sure set prototype has been called.
+     *
+     * @throws RuntimeException If prototype has not yet been set.
      */
     public function getEntityName()
     {
+        if (!$this->entityName) {
+            throw RuntimeException::prototypeNotSet();
+        }
+
         return $this->entityName;
+    }
+
+    /**
+     * Makes sure a result contains a single result.
+     *
+     * @param  array|null|object entity
+     *
+     * @return object|null
+     *
+     * @throws RuntimeException         If mulitple entities are found in the array.
+     * @throws InvalidArgumentException If the object is not an entity.
+     */
+    protected function singleEntity($entity)
+    {
+        if (empty($entity)) {
+            return null;
+        }
+
+        $singleEntity = $entity;
+
+        if (is_array($entity)) {
+            if (count($entity) > 1) {
+                throw RuntimeException::multipleResultsFound();
+            }
+
+            $singleEntity = reset($entity);
+        }
+
+        $entityClass = $this->getEntityName();
+
+        if (!$singleEntity instanceof $entityClass) {
+            throw InvalidArgumentException::invalidEntityType(
+                $this->getEntityName(),
+                $singleEntity
+            );
+        }
+
+        return $singleEntity;
     }
 
     /**
@@ -71,10 +116,13 @@ trait CommonMapperMethodsTrait
      * Setup the prototype of the entity this mapper works with.
      *
      * @param  object $prototype
-     * @todo   Make sure cannot be called twice.
      */
     protected function setPrototype($prototype)
     {
+        if ($this->entityName) {
+            throw RuntimeException::setPrototypeCalledAgain();
+        }
+
         if (!is_object($prototype)) {
             throw InvalidArgumentException::objectExpected($prototype);
         }

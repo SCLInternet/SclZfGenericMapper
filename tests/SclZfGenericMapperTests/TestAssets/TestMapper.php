@@ -19,8 +19,13 @@ class TestMapper
 {
     use CommonMapperMethodsTrait;
 
-    public function __construct($prototype)
+    public function publicSetPrototype($prototype)
     {
         $this->setPrototype($prototype);
+    }
+
+    public function publicSingleEntity($entity)
+    {
+        return $this->singleEntity($entity);
     }
 }
