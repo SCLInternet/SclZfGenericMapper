@@ -1,0 +1,36 @@
+{
+    "name": "sclinternet/scl-zf-generic-mapper",
+    "description": "Simple mapper base classes and interfaces for quick implementation of database layers",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/SCLInternet/SclZfGenericMapper",
+    "authors": [
+        {
+            "name": "Tom Oram",
+            "email": "tom@scl.co.uk",
+            "homepage": "http://github.com/tomphp"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework" : "2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "3.7.*",
+        "phpunit/dbunit" : ">=1.2",
+        "squizlabs/php_codesniffer" : "1.*",
+        "phpmd/phpmd" : "1.4.0",
+        "zf-commons/zfc-base" : "*",
+        "doctrine/orm": "2.3.4",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "SclZfGenericMapper": "src/"
+        }
+    },
+    "suggest": { 
+        "zf-commons/zfc-base": "Required for the ZendDbMapper",
+        "doctrine/doctrine-orm-module": "Doctrine ORM module"
+    }
+}

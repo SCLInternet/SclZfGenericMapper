@@ -1,0 +1,7 @@
+test_entity:
+    -
+        id: 1
+        name: "fantastic"
+    -
+        id: 2
+        name: "delete-me"
