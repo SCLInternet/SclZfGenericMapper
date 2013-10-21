@@ -45,7 +45,7 @@ class DoctrineMapper implements MapperInterface
     public function __construct(
         $prototype,
         ObjectManager $entityManager,
-        FlushLock $flushLock
+        FlushLock $flushLock = null
     ) {
         $this->setPrototype($prototype);
 
@@ -60,11 +60,19 @@ class DoctrineMapper implements MapperInterface
     {
         $this->checkIsEntity($entity);
 
-        $this->flushLock->lock();
+        if (null !== $this->flushLock) {
+            $this->flushLock->lock();
+
+            $this->entityManager->persist($entity);
+
+            return $this->flushLock->unlock();
+        }
 
         $this->entityManager->persist($entity);
 
-        return $this->flushLock->unlock();
+        $this->entityManager->flush();
+
+        return true;
     }
 
     /**
@@ -98,10 +106,18 @@ class DoctrineMapper implements MapperInterface
     {
         $this->checkIsEntity($entity);
 
-        $this->flushLock->lock();
+        if (null !== $this->flushLock) {
+            $this->flushLock->lock();
+
+            $this->entityManager->remove($entity);
+
+            return $this->flushLock->unlock();
+        }
 
         $this->entityManager->remove($entity);
 
-        return $this->flushLock->unlock();
+        $this->entityManager->flush();
+
+        return true;
     }
 }
