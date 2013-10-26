@@ -17,6 +17,8 @@ use ZfcBase\Mapper\AbstractDbMapper;
  * Basic mapper class for zend db storage.
  *
  * @author Tom Oram <tom@scl.co.uk>
+ *
+ * @todo Fix the fact that it depends on getId() method.
  */
 class ZendDbMapper extends AbstractDbMapper implements MapperInterface
 {
@@ -58,7 +60,7 @@ class ZendDbMapper extends AbstractDbMapper implements MapperInterface
     public function findById($id)
     {
         $select = $this->getSelect()
-                       ->where(['id' => $id]);
+                       ->where([$this->idField => $id]);
 
         $entity = $this->select($select)->current();
 
@@ -92,7 +94,7 @@ class ZendDbMapper extends AbstractDbMapper implements MapperInterface
         $this->checkIsEntity($entity);
 
         $this->delete(
-            ['id' => $entity->getId()],
+            [$this->idField => $entity->getId()],
             $this->tableName
         );
     }
@@ -104,8 +106,14 @@ class ZendDbMapper extends AbstractDbMapper implements MapperInterface
     {
         $this->checkIsEntity($entity);
 
-        $result = $this->insert($entity);
+        if (!$entity->getId()) {
+            $result = $this->insert($entity);
 
-        $entity->setId($result->getGeneratedValue());
+            $entity->setId($result->getGeneratedValue());
+
+            return;
+        }
+
+        $this->update($entity, [$this->idField => $entity->getId()]);
     }
 }

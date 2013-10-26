@@ -239,7 +239,7 @@ abstract class AbstractMapperImplementationTest extends \PHPUnit_Extensions_Data
     {
         $entity = new TestEntity();
 
-        $entity->setname('new-entity');
+        $entity->setName('new-entity');
 
         $this->mapper->save($entity);
 
@@ -253,12 +253,35 @@ abstract class AbstractMapperImplementationTest extends \PHPUnit_Extensions_Data
     {
         $entity = new TestEntity();
 
-        $entity->setname('new-entity');
+        $entity->setName('new-entity');
 
         $this->mapper->save($entity);
 
         $this->assertInternalType('integer', $entity->getId());
         $this->assertEquals(3, $entity->getId());
+    }
+
+    /**
+     * @depends test_save_adds_Entity_to_the_database
+     * @depends test_save_updates_the_object_id
+     */
+    public function test_save_updates_existing_object()
+    {
+        $entity = new TestEntity();
+
+        $entity->setName('initial');
+
+        $this->mapper->save($entity);
+
+        $id = $entity->getId();
+
+        $entity->setName('newval');
+
+        $this->mapper->save($entity);
+
+        $reloadedEntity = $this->mapper->findById($id);
+
+        $this->assertEquals('newval', $reloadedEntity->getName());
     }
 
     /**
