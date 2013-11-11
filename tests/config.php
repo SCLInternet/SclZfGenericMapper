@@ -1,0 +1,32 @@
+<?php
+
+namespace SclZfGenericMapperTests;
+
+return [
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'driverClass' => 'Doctrine\DBAL\Driver\PDOSqlite\Driver',
+                'params' => [
+                    'path'=> __DIR__ . '/test.db',
+                ],
+            ],
+        ],
+        /*
+        'driver' => [
+            __NAMESPACE__ . '_driver' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [
+                    __DIR__ . '/' . __NAMESPACE__ . '/TestAssets/Entity/',
+                ],
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    __NAMESPACE__ => __NAMESPACE__ . '_driver',
+                ],
+            ],
+        ],
+        */
+    ],
+];

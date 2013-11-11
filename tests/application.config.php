@@ -10,10 +10,12 @@ return array(
     'modules' => array(
         'ZfcBase',
         'SclZfGenericMapper',
+        'DoctrineModule',
+        'DoctrineORMModule',
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
-            'config.global.php',
+            'config.php',
         ),
         'module_paths' => array(
             __DIR__ . '/../..',

@@ -12,9 +12,9 @@ use SclZfGenericMapper\Doctrine\FlushLock;
 
 class FlushLockTest extends \PHPUnit_Framework_TestCase
 {
-    protected $flushLock;
+    private $flushLock;
 
-    protected $entityManager;
+    private $entityManager;
 
     protected function setUp()
     {
@@ -23,7 +23,17 @@ class FlushLockTest extends \PHPUnit_Framework_TestCase
         $this->flushLock = new FlushLock($this->entityManager);
     }
 
-    public function testLockUnlock()
+    public function test_module_provides_FlushLock_service()
+    {
+        $this->assertInstanceOf(
+            'SclZfGenericMapper\Doctrine\FlushLock',
+            \TestBootstrap::getApplication()
+                          ->getServiceManager()
+                          ->get('SclZfGenericMapper\Doctrine\FlushLock')
+        );
+    }
+
+    public function test_locking_and_unlocking()
     {
         $this->entityManager
              ->expects($this->once())
@@ -37,7 +47,7 @@ class FlushLockTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->flushLock->unlock(), 'Returned false on final unlock.');
     }
 
-    public function testUnlockTooFar()
+    public function test_unlocking_too_many_times()
     {
         $this->entityManager
              ->expects($this->never())

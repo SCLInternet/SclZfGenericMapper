@@ -9,13 +9,16 @@
 namespace SclZfGenericMapper;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
 /**
  * ZF2 module class for the SclZfGenericMapper module.
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class Module implements AutoloaderProviderInterface
+class Module implements
+    AutoloaderProviderInterface,
+    ServiceProviderInterface
 {
     /**
      * {@inheritDoc}
@@ -23,11 +26,27 @@ class Module implements AutoloaderProviderInterface
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__,
-                ),
-            ),
+                ],
+            ],
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getServiceConfig()
+    {
+        return [
+            'factories' => [
+                'SclZfGenericMapper\Doctrine\FlushLock' => function ($sm) {
+                    return new \SclZfGenericMapper\Doctrine\FlushLock(
+                        $sm->get('doctrine.entitymanager.orm_default')
+                    );
+                },
+            ],
+        ];
     }
 }
