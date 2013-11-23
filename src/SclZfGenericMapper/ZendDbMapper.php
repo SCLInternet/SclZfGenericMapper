@@ -116,4 +116,22 @@ class ZendDbMapper extends AbstractDbMapper implements MapperInterface
 
         $this->update($entity, [$this->idField => $entity->getId()]);
     }
+
+    /**
+     * The version allows read-write access.
+     *
+     * @param  string $table
+     *
+     * @return \Zend\Db\Sql\Select
+     */
+    protected function getSelect($table = null)
+    {
+        $this->initialize();
+
+        $select = $this->getSlaveSql()->select();
+
+        $select->from($table ?: $this->getTableName());
+
+        return $select;
+    }
 }
