@@ -1,17 +1,5 @@
 #!/bin/bash
 
-### Run unit tests
-vendor/bin/phpunit --coverage-clover="build/logs/clover.xml"
-PHPUNIT=$?
-
-### Check coding standards
-vendor/bin/phpcs --standard=psr2 src
-PHPCS=$?
-
-### Check code quality
-vendor/bin/phpmd src text codesize
-PHPMD=$?
-
 ### Check for license headers
 LICENSE=0
 
@@ -38,18 +26,6 @@ EXIT=0
 echo
 echo "#### RESULTS:"
 
-if [ "$PHPUNIT" -ne "0" ]; then
-    echo "**** Unit tests failed"
-    EXIT=1
-fi
-if [ "$PHPCS" -ne "0" ]; then
-    echo "**** Coding standards failed"
-    EXIT=1
-fi
-if [ "$PHPMD" -ne "0" ]; then
-    echo "**** Mess detection failed"
-    EXIT=1
-fi
 if [ "$LICENSE" -ne "0" ]; then
     echo "**** License header check failed"
     EXIT=1
