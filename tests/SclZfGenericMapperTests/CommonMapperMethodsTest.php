@@ -18,7 +18,7 @@ use SclZfGenericMapperTests\TestAssets\TestMapper;
  */
 class CommonMapperMethodsTraitTest extends \PHPUnit_Framework_TestCase
 {
-    protected $mapper;
+    private $mapper;
 
     /**
      * Set up the instance to be tested.
@@ -35,16 +35,11 @@ class CommonMapperMethodsTraitTest extends \PHPUnit_Framework_TestCase
      * setPrototype()
      */
 
-    public function test_setPrototype_throws_if_prototype_not_object()
+    public function test_setPrototype_accepts_string()
     {
         $mapper = new TestMapper();
 
-        $this->setExpectedException(
-            'SclZfGenericMapper\Exception\InvalidArgumentException',
-            'Expected an object; got "string".'
-        );
-
-        $mapper->publicSetPrototype('bad_prototype');
+        $mapper->publicSetPrototype('My\Entity\Name');
     }
 
     public function test_setPrototype_throws_if_called_twice()
@@ -81,6 +76,22 @@ class CommonMapperMethodsTraitTest extends \PHPUnit_Framework_TestCase
         $mapper->create();
     }
 
+    public function test_create_throws_if_mapper_is_for_abstract_class()
+    {
+        $entityName = 'SclZfGenericMapperTests\TestAssets\Entity\TestAbstractEntity';
+
+        $mapper = new TestMapper();
+
+        $mapper->publicSetPrototype($entityName);
+
+        $this->setExpectedException(
+            'SclZfGenericMapper\Exception\RuntimeException',
+            'Cannot create abstract class entity "'. $entityName . '".'
+        );
+
+        $mapper->create();
+    }
+
     /*
      * getEntityName()
      */
@@ -91,6 +102,15 @@ class CommonMapperMethodsTraitTest extends \PHPUnit_Framework_TestCase
             'SclZfGenericMapperTests\TestAssets\Entity\TestEntity',
             $this->mapper->getEntityName()
         );
+    }
+
+    public function test_getEntityName_return_name_of_entity_for_string_prototype()
+    {
+        $mapper = new TestMapper();
+
+        $mapper->publicSetPrototype('My\Entity\Name');
+
+        $this->assertEquals('My\Entity\Name', $mapper->getEntityName());
     }
 
     public function test_getEntityName_throws_if_prototype_not_set()

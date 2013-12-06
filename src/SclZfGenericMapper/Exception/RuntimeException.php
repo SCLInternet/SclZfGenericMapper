@@ -26,6 +26,18 @@ class RuntimeException extends \RuntimeException implements ExceptionInterface
     }
 
     /**
+     * 'Cannot create abstract class entity "%s".'
+     *
+     * @param  string $className
+     *
+     * @return RuntimeException
+     */
+    public static function createAbstract($className)
+    {
+        return new self('Cannot create abstract class entity "'. $className . '".');
+    }
+
+    /**
      * 'SclZfGenericMapper\Exception\RuntimeException'
      *
      * @return RuntimeException
@@ -34,7 +46,6 @@ class RuntimeException extends \RuntimeException implements ExceptionInterface
     {
         return new self('setPrototype() can only be called once.');
     }
-
 
     /**
      * 'Prototype entity class has not been set.'

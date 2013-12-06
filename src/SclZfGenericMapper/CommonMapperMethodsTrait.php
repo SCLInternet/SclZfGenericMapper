@@ -36,6 +36,12 @@ trait CommonMapperMethodsTrait
     {
         $entityClass = $this->getEntityName();
 
+        $reflection = new \ReflectionClass($entityClass);
+
+        if ($reflection->isAbstract()) {
+            throw RuntimeException::createAbstract($entityClass);
+        }
+
         return new $entityClass();
     }
 
@@ -123,10 +129,8 @@ trait CommonMapperMethodsTrait
             throw RuntimeException::setPrototypeCalledAgain();
         }
 
-        if (!is_object($prototype)) {
-            throw InvalidArgumentException::objectExpected($prototype);
-        }
-
-        $this->entityName = get_class($prototype);
+        $this->entityName = is_object($prototype)
+            ? get_class($prototype)
+            : $prototype;
     }
 }

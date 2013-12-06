@@ -38,7 +38,7 @@ class DoctrineMapper implements MapperInterface
     /**
      * Inject required objects.
      *
-     * @param  object        $prototype
+     * @param  object|string $prototype     An object protoype of the FQCN
      * @param  ObjectManager $entityManager
      * @param  FlushLock     $flushLock
      */

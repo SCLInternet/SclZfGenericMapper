@@ -33,6 +33,11 @@ class ZendDbMapper extends AbstractDbMapper implements MapperInterface
 
     /**
      * Initialize the mapper.
+     *
+     * @param  object            $prototype
+     * @param  string            $tableName
+     * @param  string            $idField
+     * @param  HydratorInterface $hydrator
      */
     public function __construct(
         $prototype,
